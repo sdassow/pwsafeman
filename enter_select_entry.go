@@ -28,4 +28,3 @@ func (e *enterSelectEntry) KeyDown(key *fyne.KeyEvent) {
 		e.SelectEntry.KeyDown(key)
 	}
 }
-

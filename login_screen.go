@@ -1,16 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 	"strings"
-	"encoding/json"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
-	"fyne.io/fyne/widget"
-	"fyne.io/fyne/storage"
 	"fyne.io/fyne/layout"
+	"fyne.io/fyne/storage"
+	"fyne.io/fyne/widget"
 )
 
 func (t *Thing) getFiles() ([]string, error) {
@@ -80,12 +80,10 @@ func (t *Thing) LoginScreen() {
 	//t.fileInput = widget.NewSelectEntry(files)
 	t.fileInput = newEnterSelectEntry()
 	if len(files) > 0 {
-	//	t.fileInput.Text = files[0]
 		t.addFile(files[0])
 	} else {
 		t.addFile("")
 	}
-	//t.fileInput.SetOptions(files)
 
 	//t.fileInput.KeyDown = func(text string) {
 	//	log.Printf("got input file: %+v", text)
@@ -103,12 +101,7 @@ func (t *Thing) LoginScreen() {
 			}
 			log.Printf("what now: %s", r.URI())
 			t.input = r
-			//t.fileEntries = append(t.fileEntries, r.URI().String())
 			t.addFile(strings.TrimPrefix(r.URI().String(), "file://"))
-			//log.Printf("entries: %+v", t.fileEntries)
-			//t.fileInput.Text = r.URI().String()
-			//t.fileInput.SetOptions(t.fileEntries)
-			//t.fileInput.Refresh()
 		}, t.win)
 		fd.SetFilter(storage.NewExtensionFileFilter([]string{".pwsafe3", ".pwsafe", "psafe3"}))
 		fd.Show()
@@ -178,4 +171,3 @@ func (t *Thing) LoginScreen() {
 	))
 
 }
-

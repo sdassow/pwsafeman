@@ -5,14 +5,12 @@ import (
 	"time"
 
 	"fyne.io/fyne"
-	//"fyne.io/fyne/app"
-	//"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
-	"fyne.io/fyne/widget"
 	"fyne.io/fyne/theme"
+	"fyne.io/fyne/widget"
 
-        "golang.org/x/text/language"
-        "golang.org/x/text/search"
+	"golang.org/x/text/language"
+	"golang.org/x/text/search"
 )
 
 func (t *Thing) find(term string) {
@@ -146,6 +144,7 @@ func (t *Thing) MainScreen() {
 	var ti *time.Timer
 	delay := 250 * time.Millisecond
 
+	// search field
 	s := widget.NewEntry()
 	s.ActionItem = widget.NewIcon(theme.SearchIcon())
 	s.OnChanged = func(text string) {
@@ -165,24 +164,26 @@ func (t *Thing) MainScreen() {
 
 	}
 
-
+	// button to add entry
 	add := widget.NewButtonWithIcon("", theme.ContentAddIcon(), func() {
 		log.Println("add...")
 	})
 
+	// top line with add button left and search on right
 	top := fyne.NewContainerWithLayout(
 		layout.NewBorderLayout(nil, nil, add, s),
 		add,
 		s,
 	)
 
+	// show all entries
 	t.list()
 
+	// inner table
 	xtab := fyne.NewContainerWithLayout(
 		layout.NewBorderLayout(nil, nil, nil, nil),
 		t.table,
 	)
-
 
 	c := fyne.NewContainerWithLayout(
 		layout.NewBorderLayout(top, bottom, nil, nil),
@@ -195,4 +196,3 @@ func (t *Thing) MainScreen() {
 
 	t.win.SetContent(c)
 }
-
