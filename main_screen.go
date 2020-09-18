@@ -11,18 +11,20 @@ import (
 
 	"golang.org/x/text/language"
 	"golang.org/x/text/search"
+
+	"github.com/lucasepe/pwsafe"
 )
 
 func (t *Thing) find(term string) {
 	if term == "" {
-		t.list()
+		t.list2()
 		return
 	}
 
 	matcher := search.New(language.English, search.Loose, search.IgnoreCase, search.IgnoreDiacritics)
 	pattern := matcher.CompileString(term)
 
-	rows := make([][]string, 0)
+	recs := make([]pwsafe.Record, 0)
 	for _, title := range t.db.List() {
 		rec, found := t.db.GetRecord(title)
 		if !found {
@@ -35,18 +37,10 @@ func (t *Thing) find(term string) {
 		}
 		log.Printf("found: %s", title)
 
-		row := []string{
-			rec.Title,
-			rec.Title,
-			rec.Username,
-			rec.Group,
-			rec.Title,
-		}
-
-		rows = append(rows, row)
+		recs = append(recs, rec)
 	}
 
-	t.updateTable(rows)
+	t.updateList(recs)
 }
 
 func (t *Thing) list() {
@@ -138,6 +132,51 @@ func rowsToColumns(headings []string, rows [][]string) [][]string {
 	return columns
 }
 
+func (t *Thing) list2() {
+	entries := t.db.List()
+	recs := make([]pwsafe.Record, 0)
+	for _, title := range entries {
+		rec, found := t.db.GetRecord(title)
+		if !found {
+			continue
+		}
+		recs = append(recs, rec)
+	}
+	t.updateList(recs)
+}
+
+func (t *Thing) updateList(recs []pwsafe.Record) {
+	objects := make([]fyne.CanvasObject, 0, len(recs))
+	for _, rec := range recs {
+		box := widget.NewHBox(
+			widget.NewButtonWithIcon("", theme.InfoIcon(), func() {
+				t.ViewScreen(rec)
+			}),
+			widget.NewButtonWithIcon("", theme.InfoIcon(), func() {
+				// put password into clipboard
+				t.win.Clipboard().SetContent(rec.Password)
+				// XXX: after N seconds clear clipboard again
+			}),
+			widget.NewLabelWithStyle(
+				rec.Title,
+				fyne.TextAlignLeading,
+				fyne.TextStyle{Bold: true},
+			),
+			widget.NewLabel(rec.Username),
+		)
+
+		objects = append(objects, box)
+	}
+
+	if t.table == nil {
+		t.table = widget.NewVBox(objects...)
+	} else {
+		t.table.Children = objects
+	}
+	t.table.Refresh()
+}
+
+
 func (t *Thing) MainScreen() {
 	bottom := widget.NewLabel("Bottom")
 
@@ -167,6 +206,7 @@ func (t *Thing) MainScreen() {
 	// button to add entry
 	add := widget.NewButtonWithIcon("", theme.ContentAddIcon(), func() {
 		log.Println("add...")
+		t.AddScreen()
 	})
 
 	// top line with add button left and search on right
@@ -177,7 +217,7 @@ func (t *Thing) MainScreen() {
 	)
 
 	// show all entries
-	t.list()
+	t.list2()
 
 	// inner table
 	xtab := fyne.NewContainerWithLayout(
