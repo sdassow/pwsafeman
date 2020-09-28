@@ -39,37 +39,7 @@ func NewThing() *Thing {
 	return t
 }
 
-/*
-type myuri struct {
-	path string
-}
-
-func (m myuri) String() string {
-	return m.Scheme() + m.path
-}
-
-func (m myuri) Extension() string {
-	return ""
-}
-
-func (m myuri) MimeType() string {
-	return ""
-}
-
-func (m myuri) Scheme() string {
-	return "file://"
-}
-*/
-
 func (t *Thing) SaveDb() {
-/*
-	uri := myuri{t.fileInput.Text}
-	w, err := storage.SaveFileToURI(uri)
-	if err != nil {
-		dialog.ShowError(err, t.win)
-	}
-	defer w.Close()
-*/
 	var w bytes.Buffer
 
 	_, err := t.db.Encrypt(&w)
