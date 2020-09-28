@@ -13,6 +13,8 @@ import (
 	"fyne.io/fyne/widget"
 )
 
+var fileExtensions []string = []string{".pwsafe3", ".pwsafe", "psafe3"}
+
 func (t *Thing) getFiles() ([]string, error) {
 	filesStr := t.app.Preferences().String("files")
 	files := make([]string, 0)
@@ -103,7 +105,7 @@ func (t *Thing) LoginScreen() {
 			t.input = r
 			t.addFile(strings.TrimPrefix(r.URI().String(), "file://"))
 		}, t.win)
-		fd.SetFilter(storage.NewExtensionFileFilter([]string{".pwsafe3", ".pwsafe", "psafe3"}))
+		fd.SetFilter(storage.NewExtensionFileFilter(fileExtensions))
 		fd.Show()
 	})
 	password := widget.NewPasswordEntry()
@@ -138,7 +140,7 @@ func (t *Thing) LoginScreen() {
 					//t.input = w
 					t.addFile(strings.TrimPrefix(w.URI().String(), "file://"))
 				}, t.win)
-				fd.SetFilter(storage.NewExtensionFileFilter([]string{".pwsafe3", ".pwsafe", "psafe3"}))
+				fd.SetFilter(storage.NewExtensionFileFilter(fileExtensions))
 				fd.Show()
 
 			}),
