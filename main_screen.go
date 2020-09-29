@@ -155,7 +155,11 @@ func (t *Thing) updateList(recs []pwsafe.Record) {
 			widget.NewButtonWithIcon("", theme.InfoIcon(), func() {
 				// put password into clipboard
 				t.win.Clipboard().SetContent(rec.Password)
-				// XXX: after N seconds clear clipboard again
+				// after N seconds clear clipboard again
+				go func() {
+					time.Sleep(10 * time.Second)
+					t.win.Clipboard().SetContent("")
+				}()
 			}),
 			widget.NewLabelWithStyle(
 				rec.Title,
