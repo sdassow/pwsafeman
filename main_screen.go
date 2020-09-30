@@ -150,7 +150,7 @@ func (t *Thing) updateList(recs []pwsafe.Record) {
 	for _, rec := range recs {
 		box := widget.NewHBox(
 			widget.NewButtonWithIcon("", theme.InfoIcon(), func() {
-				t.ViewScreen(rec)
+				t.ShowViewScreen(rec)
 			}),
 			widget.NewButtonWithIcon("", theme.InfoIcon(), func() {
 				// put password into clipboard
@@ -180,8 +180,13 @@ func (t *Thing) updateList(recs []pwsafe.Record) {
 	t.table.Refresh()
 }
 
+func (t *Thing) ShowMainScreen() {
+	t.list2()
+	t.win.SetContent(t.MainScreen)
+	t.win.Show()
+}
 
-func (t *Thing) MainScreen() {
+func (t *Thing) MakeMainScreen() *fyne.Container {
 	bottom := widget.NewLabel("Bottom")
 
 	var ti *time.Timer
@@ -210,7 +215,7 @@ func (t *Thing) MainScreen() {
 	// button to add entry
 	add := widget.NewButtonWithIcon("", theme.ContentAddIcon(), func() {
 		log.Println("add...")
-		t.AddScreen()
+		t.ShowAddScreen()
 	})
 
 	// top line with add button left and search on right
@@ -238,5 +243,5 @@ func (t *Thing) MainScreen() {
 		xtab,
 	)
 
-	t.win.SetContent(c)
+	return c
 }

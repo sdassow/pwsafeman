@@ -25,12 +25,23 @@ type Thing struct {
 	fileInput  *enterSelectEntry
 	table      *widget.Box
 	configRoot string
+
+	LoginScreen	*widget.Box
+	MainScreen	*fyne.Container
+	ViewScreen	*fyne.Container
+	AddScreen	*fyne.Container
+
 }
 
 func NewThing() *Thing {
 	t := &Thing{}
 	t.app = app.NewWithID("pwsafeman")
 	t.win = t.app.NewWindow("pwsafeman")
+
+	t.LoginScreen = t.MakeLoginScreen();
+	t.MainScreen = t.MakeMainScreen();
+	t.ViewScreen = t.MakeViewScreen();
+	t.AddScreen = t.MakeAddScreen();
 
 	t.win.Resize(fyne.Size{400, 300})
 
@@ -50,11 +61,11 @@ func (t *Thing) SaveDb() {
 	if err := atomic.WriteFile(t.fileInput.Text, &w); err != nil {
 		dialog.ShowError(err, t.win)
 	}
-	t.MainScreen()
+	t.ShowMainScreen()
 }
 
 func main() {
 	thing := NewThing()
-	thing.LoginScreen()
+	thing.ShowLoginScreen()
 	thing.win.ShowAndRun()
 }

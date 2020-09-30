@@ -11,15 +11,18 @@ import (
 	"github.com/lucasepe/pwsafe"
 )
 
+func (t *Thing) ShowAddScreen() {
+	t.win.SetContent(t.AddScreen)
+	t.win.Show()
+}
 
-
-func (t *Thing) AddScreen() {
+func (t *Thing) MakeAddScreen() *fyne.Container {
 	bottom := widget.NewLabel("Bottom")
 	right := widget.NewLabel("Right")
 
 	// button to add entry
 	back := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), func() {
-		t.MainScreen()
+		t.ShowMainScreen()
 	})
 
 	// top line with add button left and search on right
@@ -48,7 +51,7 @@ func (t *Thing) AddScreen() {
 	form.SubmitText = "Ok"
 
 	form.OnCancel = func() {
-		t.MainScreen()
+		t.ShowMainScreen()
 	}
 	form.OnSubmit = func() {
 		rec := pwsafe.Record{
@@ -82,7 +85,6 @@ func (t *Thing) AddScreen() {
 		xtab,
 	)
 
-	t.win.SetContent(c)
-
+	return c
 }
 

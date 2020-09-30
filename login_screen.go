@@ -68,14 +68,18 @@ func (t *Thing) addFile(file string) {
 	t.fileInput.Refresh()
 }
 
-func (t *Thing) LoginScreen() {
+func (t *Thing) ShowLoginScreen() {
+	t.win.SetContent(t.LoginScreen)
+	t.win.Show()
+}
+
+func (t *Thing) MakeLoginScreen() *widget.Box {
 
 	hello := widget.NewLabel("Hello Fyne!")
 
 	files, err := t.getFiles()
 	if err != nil {
 		dialog.ShowError(err, t.win)
-		return
 	}
 	log.Printf("files: %+v", files)
 
@@ -122,7 +126,7 @@ func (t *Thing) LoginScreen() {
 		widget.NewFormItem("Password", password),
 	)
 
-	t.win.SetContent(widget.NewVBox(
+	return widget.NewVBox(
 		hello,
 		f,
 		widget.NewHBox(
@@ -166,10 +170,9 @@ func (t *Thing) LoginScreen() {
 					}
 					// after login put file to front
 					t.addFile(pwfile)
-					t.MainScreen()
+					t.ShowMainScreen()
 				}
 			}),
 		),
-	))
-
+	)
 }

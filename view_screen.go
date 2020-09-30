@@ -11,15 +11,19 @@ import (
 	"github.com/lucasepe/pwsafe"
 )
 
+func (t *Thing) ShowViewScreen(rec pwsafe.Record) {
+	//t.record = rec;
+	t.win.SetContent(t.ViewScreen)
+	t.win.Show()
+}
 
-
-func (t *Thing) ViewScreen(rec pwsafe.Record) {
+func (t *Thing) MakeViewScreen() *fyne.Container {
 	bottom := widget.NewLabel("Bottom")
 	right := widget.NewLabel("Right")
 
 	// button to add entry
 	back := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), func() {
-		t.MainScreen()
+		t.ShowMainScreen()
 	})
 
 	// top line with add button left and search on right
@@ -47,7 +51,6 @@ func (t *Thing) ViewScreen(rec pwsafe.Record) {
 		xtab,
 	)
 
-	t.win.SetContent(c)
-
+	return c
 }
 
