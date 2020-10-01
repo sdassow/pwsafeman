@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"bytes"
+	"time"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
@@ -24,7 +25,10 @@ type Thing struct {
 	db         pwsafe.V3
 	fileInput  *enterSelectEntry
 	table      *widget.Box
+	bottom     *widget.Label
 	configRoot string
+
+	cliptimer  *time.Timer
 
 	LoginScreen	*widget.Box
 	MainScreen	*fyne.Container

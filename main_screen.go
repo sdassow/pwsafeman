@@ -145,6 +145,22 @@ func (t *Thing) list2() {
 	t.updateList(recs)
 }
 
+func (t *Thing) clearClipboardSoon() {
+	// stop previous timer
+	if t.cliptimer != nil {
+		t.cliptimer.Stop()
+	}
+
+	// after N seconds clear clipboard again
+	go func() {
+		t.cliptimer = time.AfterFunc(10 * time.Second, func() {
+			t.win.Clipboard().SetContent("")
+			t.bottom.Text = "Clipboard cleared..."
+			t.bottom.Refresh()
+		})
+	}()
+}
+
 func (t *Thing) updateList(recs []pwsafe.Record) {
 	objects := make([]fyne.CanvasObject, 0, len(recs))
 	for _, rec := range recs {
@@ -155,11 +171,9 @@ func (t *Thing) updateList(recs []pwsafe.Record) {
 			widget.NewButtonWithIcon("", theme.InfoIcon(), func() {
 				// put password into clipboard
 				t.win.Clipboard().SetContent(rec.Password)
-				// after N seconds clear clipboard again
-				go func() {
-					time.Sleep(10 * time.Second)
-					t.win.Clipboard().SetContent("")
-				}()
+				t.bottom.Text = "Copied password to clipboard..."
+				t.bottom.Refresh()
+				t.clearClipboardSoon()
 			}),
 			widget.NewLabelWithStyle(
 				rec.Title,
@@ -187,7 +201,7 @@ func (t *Thing) ShowMainScreen() {
 }
 
 func (t *Thing) MakeMainScreen() *fyne.Container {
-	bottom := widget.NewLabel("Bottom")
+	t.bottom = widget.NewLabel("Bottom")
 
 	var ti *time.Timer
 	delay := 250 * time.Millisecond
@@ -235,9 +249,9 @@ func (t *Thing) MakeMainScreen() *fyne.Container {
 	)
 
 	c := fyne.NewContainerWithLayout(
-		layout.NewBorderLayout(top, bottom, nil, nil),
+		layout.NewBorderLayout(top, t.bottom, nil, nil),
 		top,
-		bottom,
+		t.bottom,
 		//widget.NewVScrollContainer(t.table),
 		//t.table,
 		xtab,
