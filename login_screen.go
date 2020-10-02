@@ -15,11 +15,13 @@ import (
 
 var fileExtensions []string = []string{".pwsafe3", ".pwsafe", "psafe3"}
 
+// Get list of password files from app preferences.
 func (t *Thing) getFiles() ([]string, error) {
+	// files are stored as a json string
 	filesStr := t.app.Preferences().String("files")
 	files := make([]string, 0)
 
-	// list to array
+	// convert json to array
 	if filesStr != "" {
 		if err := json.Unmarshal([]byte(filesStr), &files); err != nil {
 			dialog.ShowError(err, t.win)
@@ -30,20 +32,23 @@ func (t *Thing) getFiles() ([]string, error) {
 	return files, nil
 }
 
+// Add file to list of password files stored in app preferences.
 func (t *Thing) addFile(file string) {
+	// first get current files
 	files, err := t.getFiles()
 	if err != nil {
 		dialog.ShowError(err, t.win)
 		return
 	}
 
-	// put file to top, rest follows
-	dedups := make(map[string]bool)
+	// put given file to top
 	nfiles := make([]string, 0, len(files))
 	if file != "" {
 		nfiles = append(nfiles, file)
 	}
 
+	// add other files from list
+	dedups := make(map[string]bool)
 	for _, f := range files {
 		if f == file || f == "" {
 			continue
@@ -69,6 +74,7 @@ func (t *Thing) addFile(file string) {
 	}
 	t.app.Preferences().SetString("files", string(filesStr))
 
+	// update dropdown options and dropdown input field
 	t.fileInput.SetOptions(files)
 	t.fileInput.Text = file
 	t.fileInput.Refresh()
