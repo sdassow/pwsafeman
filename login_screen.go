@@ -22,6 +22,7 @@ func (t *Thing) getFiles() ([]string, error) {
 	// list to array
 	if filesStr != "" {
 		if err := json.Unmarshal([]byte(filesStr), &files); err != nil {
+			dialog.ShowError(err, t.win)
 			return nil, err
 		}
 	}
