@@ -53,6 +53,11 @@ func (t *Thing) addFile(file string) {
 		}
 		dedups[f] = true
 		nfiles = append(nfiles, f)
+
+		// limit length of list
+		if len(nfiles) >= 10 {
+			break
+		}
 	}
 	files = nfiles
 
