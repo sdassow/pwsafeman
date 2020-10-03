@@ -162,7 +162,6 @@ func (t *Thing) MakeLoginScreen() *widget.Box {
 			}),
 			widget.NewButton("Open", func() {
 				pwfile := t.fileInput.Text
-				log.Printf("try this: %+v", password.Text)
 				if t.input == nil {
 					var err error
 					t.input, err = os.Open(pwfile)
