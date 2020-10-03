@@ -176,7 +176,7 @@ func (t *Thing) MakeLoginScreen() *widget.Box {
 					_, err := t.db.Decrypt(t.input, password.Text)
 					if err != nil {
 						dialog.ShowError(err, t.win)
-						log.Printf("failed to open file: %v", err)
+						log.Printf("failed to decrypt database: %v", err)
 						return
 					}
 					// after login put file to front
