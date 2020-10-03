@@ -169,11 +169,17 @@ func (t *Thing) MakeLoginScreen() *widget.Box {
 						dialog.ShowError(err, t.win)
 						log.Printf("failed to open file: %s", pwfile)
 						t.input = nil
+						password.Text = ""
+						password.Refresh()
 						return
 					}
 				}
 				if t.input != nil {
 					_, err := t.db.Decrypt(t.input, password.Text)
+					password.Text = ""
+					password.Refresh()
+					t.input.Close()
+					t.input = nil
 					if err != nil {
 						dialog.ShowError(err, t.win)
 						log.Printf("failed to decrypt database: %v", err)
